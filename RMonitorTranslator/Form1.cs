@@ -127,6 +127,9 @@ namespace RMonitorTranslator
                     break;
                 case "$J": // Passing information
                     break;
+                case "$TRAIN":
+                    TrainInfoMessage(components);
+                    break;
                 default:
                     break;
             }
@@ -214,6 +217,12 @@ namespace RMonitorTranslator
             string driverNumber = components[2].Replace("\"", "");
             System.Diagnostics.Debug.WriteLine(string.Format("Prac/Qual Position {0}: {1}", position, driverNumber));
         }
+
+        void TrainInfoMessage(string[] components)
+        {
+            System.Diagnostics.Debug.WriteLine("$TRAIN message received");
+        }
+
         void InitRecordMessage(string[] components)
         {
             System.Diagnostics.Debug.WriteLine("Init record received");
