@@ -69,7 +69,7 @@ namespace RMonitorTranslator
 
             try
             {
-                Reconnect();
+                Reconnect(0);
             }
             catch (Exception ex)
             {
@@ -88,9 +88,10 @@ namespace RMonitorTranslator
             }
         }
 
-        void Reconnect()
+        void Reconnect(int waitBeforeReconnect)
         {
-            System.Threading.Thread.Sleep(10000);
+            if (waitBeforeReconnect > 0)
+                System.Threading.Thread.Sleep(waitBeforeReconnect);
 
             if (m_reader != null)
             {
@@ -118,12 +119,12 @@ namespace RMonitorTranslator
                 try
                 {
                     if (m_reader == null)
-                        Reconnect();
+                        Reconnect(10000);
 
                     string message = m_reader.ReadLine();
 
                     if (string.IsNullOrEmpty(message))
-                        Reconnect();
+                        Reconnect(10000);
                     else
                         HandleMessage(message);
                 }
