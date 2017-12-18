@@ -16,7 +16,15 @@ namespace RMonitorTranslator
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new RMonitorForm());
+
+            ConnectForm connectForm = new ConnectForm();
+
+            DialogResult result = connectForm.ShowDialog();
+
+            if (result != DialogResult.OK)
+                return;
+
+            Application.Run(new RMonitorForm(connectForm.Server, connectForm.COMPort));
         }
     }
 }
