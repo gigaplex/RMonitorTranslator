@@ -15,12 +15,15 @@ namespace RMonitorTranslator
 {
     public partial class RMonitorForm : Form
     {
-        TcpClient m_tcpClient = new TcpClient();
+        string m_serverAddress;
+        string m_comPort;
+
+        TcpClient m_tcpClient;
         System.IO.Ports.SerialPort m_serialPort;
         Thread m_readerThread;
         StreamReader m_reader;
 
-        TextBox[] positionTextBoxes;
+        TextBox[] m_positionTextBoxes;
 
         Dictionary<string, Driver> m_drivers = new Dictionary<string, Driver>();
         Dictionary<int, string> m_positions = new Dictionary<int, string>();
@@ -28,11 +31,14 @@ namespace RMonitorTranslator
         string m_timeRemaining;
         string m_timeOfDay;
 
-        public RMonitorForm()
+        public RMonitorForm(string server, string comPort)
         {
+            m_serverAddress = server;
+            m_comPort = comPort;
+
             InitializeComponent();
 
-            positionTextBoxes = new TextBox[]
+            m_positionTextBoxes = new TextBox[]
             {
                 position1TextBox,
                 position2TextBox,
@@ -45,48 +51,92 @@ namespace RMonitorTranslator
                 position9TextBox,
                 position10TextBox
             };
-
-            string[] ports = System.IO.Ports.SerialPort.GetPortNames();
-
-            foreach (string port in ports)
-            {
-                comPortComboBox.Items.Add(port);
-            }
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            m_tcpClient.Close();
             if (m_readerThread != null)
                 m_readerThread.Abort();
+
+            if (m_tcpClient != null)
+                m_tcpClient.Close();
 
             base.OnFormClosing(e);
         }
 
-        private void connectButton_Click(object sender, EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
-            m_tcpClient.Connect(addressTextBox.Text, 12345);
+            base.OnLoad(e);
 
-            m_reader = new StreamReader(m_tcpClient.GetStream(), Encoding.ASCII);
+            try
+            {
+                Reconnect(0);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Close();
+                return;
+            }
 
             m_readerThread = new Thread(ReaderThread);
             m_readerThread.Start();
 
-            string comPort = comPortComboBox.SelectedItem?.ToString();
-            string baudStr = baudTextBox.Text;
-            if (!string.IsNullOrEmpty(comPort) && !string.IsNullOrEmpty(baudStr))
+            if (!string.IsNullOrEmpty(m_comPort))
             {
-                m_serialPort = new System.IO.Ports.SerialPort(comPort, int.Parse(baudStr));
+                m_serialPort = new System.IO.Ports.SerialPort(m_comPort, 9600);
                 m_serialPort.Open();
             }
         }
 
+        void Reconnect(int waitBeforeReconnect)
+        {
+            if (waitBeforeReconnect > 0)
+                System.Threading.Thread.Sleep(waitBeforeReconnect);
+
+            if (m_reader != null)
+            {
+                m_reader.Dispose();
+                m_reader = null;
+            }
+
+            if (m_tcpClient != null)
+            {
+                ((IDisposable)m_tcpClient).Dispose();
+                m_tcpClient = null;
+            }
+
+            TcpClient tcpClient = new TcpClient();
+            tcpClient.Connect(m_serverAddress, 12345);
+
+            m_tcpClient = tcpClient;
+            m_reader = new StreamReader(m_tcpClient.GetStream(), Encoding.ASCII);
+        }
+
         void ReaderThread()
         {
-            while (m_tcpClient.Connected)
+            while (true)
             {
-                string message = m_reader.ReadLine();
-                HandleMessage(message);
+                try
+                {
+                    if (m_reader == null)
+                        Reconnect(10000);
+
+                    string message = m_reader.ReadLine();
+
+                    if (string.IsNullOrEmpty(message))
+                        Reconnect(10000);
+                    else
+                        HandleMessage(message);
+                }
+                catch (ThreadAbortException)
+                {
+                    return;
+                }
+                catch (Exception e)
+                {
+                    System.Diagnostics.Debug.WriteLine(e.ToString());
+                }
             }
         }
 
@@ -203,7 +253,7 @@ namespace RMonitorTranslator
             {
                 Invoke(new Action(() =>
                 {
-                   positionTextBoxes[position - 1].Text = string.Format("Car {0}: {1} {2}", driverNumber, driver.FirstName, driver.LastName);
+                    m_positionTextBoxes[position - 1].Text = string.Format("Car {0}: {1} {2}", driverNumber, driver.FirstName, driver.LastName);
                 }));
             }
             else
@@ -245,9 +295,9 @@ namespace RMonitorTranslator
                 clockTextBox.Text = timeOfDay;
                 raceClockTextBox.Text = null;
 
-                for (int i = 0; i < positionTextBoxes.Length; ++i)
+                for (int i = 0; i < m_positionTextBoxes.Length; ++i)
                 {
-                    positionTextBoxes[i].Text = null;
+                    m_positionTextBoxes[i].Text = null;
                 }
             }));
 

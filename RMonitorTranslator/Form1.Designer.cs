@@ -30,9 +30,6 @@
         {
             this.clockTextBox = new System.Windows.Forms.TextBox();
             this.clockLabel = new System.Windows.Forms.Label();
-            this.addressTextBox = new System.Windows.Forms.TextBox();
-            this.addressLabel = new System.Windows.Forms.Label();
-            this.connectButton = new System.Windows.Forms.Button();
             this.raceClockLabek = new System.Windows.Forms.Label();
             this.raceClockTextBox = new System.Windows.Forms.TextBox();
             this.timeRemainingTextBox = new System.Windows.Forms.TextBox();
@@ -57,10 +54,6 @@
             this.position8Label = new System.Windows.Forms.Label();
             this.position9Label = new System.Windows.Forms.Label();
             this.position10Label = new System.Windows.Forms.Label();
-            this.comPortComboBox = new System.Windows.Forms.ComboBox();
-            this.comPortLabel = new System.Windows.Forms.Label();
-            this.baudTextBox = new System.Windows.Forms.TextBox();
-            this.baudLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // clockTextBox
@@ -79,32 +72,6 @@
             this.clockLabel.Size = new System.Drawing.Size(37, 13);
             this.clockLabel.TabIndex = 1;
             this.clockLabel.Text = "Clock:";
-            // 
-            // addressTextBox
-            // 
-            this.addressTextBox.Location = new System.Drawing.Point(103, 379);
-            this.addressTextBox.Name = "addressTextBox";
-            this.addressTextBox.Size = new System.Drawing.Size(150, 20);
-            this.addressTextBox.TabIndex = 2;
-            // 
-            // addressLabel
-            // 
-            this.addressLabel.AutoSize = true;
-            this.addressLabel.Location = new System.Drawing.Point(12, 382);
-            this.addressLabel.Name = "addressLabel";
-            this.addressLabel.Size = new System.Drawing.Size(41, 13);
-            this.addressLabel.TabIndex = 3;
-            this.addressLabel.Text = "Server:";
-            // 
-            // connectButton
-            // 
-            this.connectButton.Location = new System.Drawing.Point(259, 377);
-            this.connectButton.Name = "connectButton";
-            this.connectButton.Size = new System.Drawing.Size(75, 23);
-            this.connectButton.TabIndex = 4;
-            this.connectButton.Text = "Connect";
-            this.connectButton.UseVisualStyleBackColor = true;
-            this.connectButton.Click += new System.EventHandler(this.connectButton_Click);
             // 
             // raceClockLabek
             // 
@@ -310,49 +277,11 @@
             this.position10Label.TabIndex = 28;
             this.position10Label.Text = "Position 10:";
             // 
-            // comPortComboBox
-            // 
-            this.comPortComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comPortComboBox.FormattingEnabled = true;
-            this.comPortComboBox.Location = new System.Drawing.Point(103, 406);
-            this.comPortComboBox.Name = "comPortComboBox";
-            this.comPortComboBox.Size = new System.Drawing.Size(150, 21);
-            this.comPortComboBox.TabIndex = 29;
-            // 
-            // comPortLabel
-            // 
-            this.comPortLabel.AutoSize = true;
-            this.comPortLabel.Location = new System.Drawing.Point(12, 409);
-            this.comPortLabel.Name = "comPortLabel";
-            this.comPortLabel.Size = new System.Drawing.Size(56, 13);
-            this.comPortLabel.TabIndex = 30;
-            this.comPortLabel.Text = "COM Port:";
-            // 
-            // baudTextBox
-            // 
-            this.baudTextBox.Location = new System.Drawing.Point(103, 434);
-            this.baudTextBox.Name = "baudTextBox";
-            this.baudTextBox.Size = new System.Drawing.Size(150, 20);
-            this.baudTextBox.TabIndex = 31;
-            // 
-            // baudLabel
-            // 
-            this.baudLabel.AutoSize = true;
-            this.baudLabel.Location = new System.Drawing.Point(12, 437);
-            this.baudLabel.Name = "baudLabel";
-            this.baudLabel.Size = new System.Drawing.Size(35, 13);
-            this.baudLabel.TabIndex = 32;
-            this.baudLabel.Text = "Baud:";
-            // 
             // RMonitorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(353, 474);
-            this.Controls.Add(this.baudLabel);
-            this.Controls.Add(this.baudTextBox);
-            this.Controls.Add(this.comPortLabel);
-            this.Controls.Add(this.comPortComboBox);
+            this.ClientSize = new System.Drawing.Size(353, 366);
             this.Controls.Add(this.position10Label);
             this.Controls.Add(this.position9Label);
             this.Controls.Add(this.position8Label);
@@ -377,9 +306,6 @@
             this.Controls.Add(this.timeRemainingTextBox);
             this.Controls.Add(this.raceClockTextBox);
             this.Controls.Add(this.raceClockLabek);
-            this.Controls.Add(this.connectButton);
-            this.Controls.Add(this.addressLabel);
-            this.Controls.Add(this.addressTextBox);
             this.Controls.Add(this.clockLabel);
             this.Controls.Add(this.clockTextBox);
             this.Name = "RMonitorForm";
@@ -393,9 +319,6 @@
 
         private System.Windows.Forms.TextBox clockTextBox;
         private System.Windows.Forms.Label clockLabel;
-        private System.Windows.Forms.TextBox addressTextBox;
-        private System.Windows.Forms.Label addressLabel;
-        private System.Windows.Forms.Button connectButton;
         private System.Windows.Forms.Label raceClockLabek;
         private System.Windows.Forms.TextBox raceClockTextBox;
         private System.Windows.Forms.TextBox timeRemainingTextBox;
@@ -420,10 +343,6 @@
         private System.Windows.Forms.Label position8Label;
         private System.Windows.Forms.Label position9Label;
         private System.Windows.Forms.Label position10Label;
-        private System.Windows.Forms.ComboBox comPortComboBox;
-        private System.Windows.Forms.Label comPortLabel;
-        private System.Windows.Forms.TextBox baudTextBox;
-        private System.Windows.Forms.Label baudLabel;
     }
 }
 
