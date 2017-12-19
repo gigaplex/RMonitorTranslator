@@ -26,6 +26,7 @@ namespace RMonitorTranslator
         Dictionary<int, string> m_positions = new Dictionary<int, string>();
         string m_raceTime;
         string m_timeRemaining;
+        string m_timeOfDay;
 
         public RMonitorForm()
         {
@@ -138,13 +139,13 @@ namespace RMonitorTranslator
         void HeartBeatMessage(string[] components)
         {
             m_timeRemaining = components[2].Replace("\"", "");
-            string timeOfDay = components[3].Replace("\"", "");
+            m_timeOfDay = components[3].Replace("\"", "");
             m_raceTime = components[4].Replace("\"", "");
 
             Invoke(new Action(() =>
             {
                 timeRemainingTextBox.Text = m_timeRemaining;
-                clockTextBox.Text = timeOfDay;
+                clockTextBox.Text = m_timeOfDay;
                 raceClockTextBox.Text = m_raceTime;
             }));
 
@@ -207,6 +208,10 @@ namespace RMonitorTranslator
             }
             else
             {
+                Invoke(new Action(() =>
+                {
+                    positionTextBoxes[position - 1].Text = string.Format("Car {0}", driverNumber);
+                }));
                 System.Diagnostics.Debug.WriteLine(string.Format("Driver number {0} in position {1} is not known", driverNumber, positionString));
             }
         }
@@ -266,15 +271,12 @@ namespace RMonitorTranslator
             if (positions.Length > 0)
                 positions.Remove(positions.Length - 1, 1);
 
-            int round = 0;
-            int heat = 0;
             int minutes = 0;
             int seconds = 0;
-            int lapsPlaceholder = 1;
 
-            if (!string.IsNullOrEmpty(m_timeRemaining))
+            if (!string.IsNullOrEmpty(m_raceTime))
             {
-                string[] tokens = m_timeRemaining.Split(':');
+                string[] tokens = m_raceTime.Split(':');
 
                 // Protocol documentation states that the format is always HH:MM:SS, however LiveTime regularly sends MM:SS
                 if (tokens.Length == 2)
@@ -290,7 +292,7 @@ namespace RMonitorTranslator
             }
 
             //[roundno:heatno:minutes:seconds:car1,carN,:laps1,lapsN,:improver1, improverN,:]
-            string scoreboardString = string.Format("[{0}:{1}:{2}:{3}:{4}:{5}::]", round, heat, minutes, seconds, positions.ToString(), lapsPlaceholder);
+            string scoreboardString = string.Format("[::{0}:{1}:{2}:::]", minutes, seconds, positions.ToString());
             System.Diagnostics.Debug.WriteLine(string.Format("Scoreboard string is {0}", scoreboardString));
 
             if (m_serialPort != null && m_serialPort.IsOpen)
