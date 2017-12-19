@@ -260,7 +260,7 @@ namespace RMonitorTranslator
             {
                 Invoke(new Action(() =>
                 {
-                    positionTextBoxes[position - 1].Text = string.Format("Car {0}", driverNumber);
+                    m_positionTextBoxes[position - 1].Text = string.Format("Car {0}", driverNumber);
                 }));
                 System.Diagnostics.Debug.WriteLine(string.Format("Driver number {0} in position {1} is not known", driverNumber, positionString));
             }
