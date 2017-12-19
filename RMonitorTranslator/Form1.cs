@@ -345,8 +345,14 @@ namespace RMonitorTranslator
             string scoreboardString = string.Format("[::{0}:{1}:{2}:::]", minutes, seconds, positions.ToString());
             System.Diagnostics.Debug.WriteLine(string.Format("Scoreboard string is {0}", scoreboardString));
 
-            if (m_serialPort != null && m_serialPort.IsOpen)
-                m_serialPort.Write(scoreboardString);
+            if (m_serialPort != null)
+            {
+                if (!m_serialPort.IsOpen)
+                    m_serialPort.Open();
+
+                if (m_serialPort.IsOpen)
+                    m_serialPort.Write(scoreboardString);
+            }
         }
 
         class Driver
