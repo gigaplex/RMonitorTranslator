@@ -24,6 +24,11 @@ namespace RMonitorTranslator
             if (result != DialogResult.OK)
                 return;
 
+            Properties.Settings.Default.Server = connectForm.Server;
+            Properties.Settings.Default.COMPort = connectForm.COMPort;
+
+            Properties.Settings.Default.Save();
+
             Application.Run(new RMonitorForm(connectForm.Server, connectForm.COMPort));
         }
     }

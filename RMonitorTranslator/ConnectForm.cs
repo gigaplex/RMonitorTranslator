@@ -22,6 +22,15 @@ namespace RMonitorTranslator
             {
                 comPortComboBox.Items.Add(port);
             }
+
+            serverTextBox.Text = Properties.Settings.Default.Server;
+
+            int portIndex = Array.IndexOf(ports, Properties.Settings.Default.COMPort);
+
+            if (portIndex >= 0)
+            {
+                comPortComboBox.SelectedIndex = portIndex;
+            }
         }
 
         public string Server
